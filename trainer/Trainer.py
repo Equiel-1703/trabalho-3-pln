@@ -4,7 +4,7 @@ from TrainingData.training_data import training_data, tags
 import random
 import sys
 
-OUTPUT = "NER_CComp"
+OUTPUT = "../model/NER_CComp"
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
