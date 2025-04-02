@@ -1,6 +1,7 @@
 import sys
 import spacy
-import fitz  # PyMuPDF
+import regex as re
+import pymupdf
 from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton, QLabel, QFileDialog, QTextEdit
 
 MODEL_PATH = "model/NER_CComp"
@@ -53,15 +54,26 @@ class PDFAnalyzerApp(QWidget):
             self.label.setText(f"Loaded: {file_name}")
     
     def extract_text_from_pdf(self, file_path):
-        doc = fitz.open(file_path)
-        text = "\n".join(page.get_text("text") for page in doc)
+        doc = pymupdf.open(file_path)
+        text = "\n".join(page.get_text("text", flags=pymupdf.TEXTFLAGS_TEXT) for page in doc)
         self.pdf_text = text
     
     def analyze_text(self):
         if self.pdf_text:
+            self.__pre_process_text()
             doc = self.nlp(self.pdf_text)
             entities = "\n".join([f"{ent.text} ({ent.label_})" for ent in doc.ents])
             self.resultText.setPlainText(entities if entities else "No named entities found.")
+    
+    def __pre_process_text(self):
+        # This will remove special characters, hyphens and extra spaces
+        def clean_text(text):
+            text = re.sub(r'[^\w\d\s\-\*]', ' ', text, flags=re.UNICODE)  # Removes everything except letters, numbers, spaces, hyphens and asterisks
+            text = re.sub(r'-+', ' ', text)  # Removes hyphens
+            text = re.sub(r'\s+', ' ', text).strip()  # Cleans up extra spaces
+            return text
+        
+        self.pdf_text = clean_text(self.pdf_text)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
