@@ -35,6 +35,7 @@ Este projeto é uma prova de conceito, portanto o conjunto de dados usado foi mu
     pip install -U pip setuptools wheel
     pip install -U spacy
     python -m spacy download pt_core_news_sm
+    pip install PyQt6
 
     ```
 
