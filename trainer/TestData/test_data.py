@@ -57,4 +57,12 @@ test_data = [
             ]
         }
     ), # OK 6
+    (
+        "Fastflow é um framework de programação paralela.",
+        {
+            "entities": [
+                (0, 8, "FRAMEWORK")
+            ]
+        }
+    ) # OK 7
 ]
